@@ -12,6 +12,9 @@ so, this repository is a demonstration that a remarkably simple, purely
 tone-based FSK protocol from the 1980s still does the job perfectly well
 today - decoded here with nothing more exotic than a Goertzel filter running.
 
+![main](https://github.com/radiolab81/EWBS_JP/blob/main/images/protocol-structure.png)
+
+
 ## What's in here
 
 - **`ewbs_encoder.py`** - a Tkinter GUI that lets you pick a WAV file (your
@@ -19,14 +22,22 @@ today - decoded here with nothing more exotic than a Goertzel filter running.
   earthquake or type II tsunami, area code, date/time, repetitions), and
   embed the resulting FSK tone into the program audio - either as a new WAV
   file or live through a sound card output (e.g. into an FM/AM modulator).
+
+  ![enc](https://github.com/radiolab81/EWBS_JP/blob/main/images/encoder.png)
+
+  
 - **`ewbs_decoder.py`** - a Tkinter GUI that monitors a WAV file or a live
   audio input (line-in/microphone) for the EWBS tone and reacts the way a
   real receiver historically would: waking up, unmuting, and (since most
   real receivers had no display) additionally showing the fully decoded
   fields for protocol verification during development.
+
+  ![dec1](https://github.com/radiolab81/EWBS_JP/blob/main/images/decoder_alert.png)
+
+  ![dec2](https://github.com/radiolab81/EWBS_JP/blob/main/images/decoder_endsignal.png)
+  
 - **`ewbs_common.py`** - the shared protocol library: bit-exact tone
-  generation/detection, the full area-code table (47 prefectures + wide-area
-  + nationwide codes), date/time encoding, and two decoder strictness levels
+  generation/detection, the full area-code table (47 prefectures + wide-area + nationwide codes), date/time encoding, and two decoder strictness levels
   (a tolerant scanner that reliably recovers the area code even from noisy
   real-world recordings, and a strict parser that fully verifies an entire
   block).
@@ -77,9 +88,9 @@ python3 ewbs_decoder.py
 
 
 1. In the encoder, pick a WAV file, configure the alarm, and either save a
-   new WAV file or play it live through a chosen sound device.
+   new WAV file or play it live through a chosen sound device/AM or FM modulator. 
 2. In the decoder, point it at that WAV file (or a live line-in/microphone
-   input) and start monitoring. A message box appears when a start or end
+   input [from a real radio]) and start monitoring. A message box appears when a start or end
    signal is recognized.
 
 By default the decoder favors **speed over exhaustive analysis** - a real
