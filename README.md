@@ -107,6 +107,38 @@ independently field-tested reference decoder (see `AREA_CODES` in
 `ewbs_common.py`). We use the field-tested value; this could be settled
 conclusively with an Iwate-specific real recording.
 
+## Porting to a microcontroller
+
+The decoder core (Goertzel filter + bit sync + block parser) is small and
+cheap enough to run on an 8-bit MCU sampling the audio output of a
+receiver IC such as an RDA5807, Si473x,... Three concrete hardware
+approaches, all sharing the same decoder logic:
+
+
+- **A) Standalone warning radio** - a fixed-frequency FM/AM module, an MCU
+  running the decoder, and an amplifier that only powers on when a start
+  signal is decoded. The simplest possible "warning radio" appliance.
+- **B) Retrofit module for radios with a non-electronic tuner** - many
+  older sets (germanium-era designs with a mechanically ganged
+  tuning capacitor) can't be steered electronically at all. Here a small
+  always-on receiver plus MCU sits alongside the untouched original radio;
+  on alarm, a relay disconnects the original set's IF/detector output from
+  its audio stage and feeds in the module's own decoded audio instead,
+  while a second relay handles power-on. 
+- **C) Electronically tunable radios: scan for the strongest station in
+  standby** - if the radio is already built around an I²C-tunable receiver
+  IC, no separate receiver hardware is needed at all: the MCU periodically
+  scans the band, reads the RSSI per channel, locks onto the strongest
+  station, and monitors its audio for the EWBS tone - duty-cycled to save
+  standby power.
+
+**Working feasibility port:** [`mcu/atmega328-poc/`](mcu/atmega328-poc/) is
+a bare-metal (pure avr-gcc/avr-libc, no Arduino core) ATmega328P firmware
+implementing approach (A)'s decoder core. It samples audio at 4096 Hz
+(chosen so both EWBS tones land exactly on a Goertzel bin - see that
+folder's README for the derivation), drives an LED and a 9600-baud serial
+console on alarm/clear, and fits in 2.5 KB of flash and 27 bytes of RAM.
+
 ## Sources
 
 - Ministry of Posts and Telecommunications Notification No. 405 (1985),
