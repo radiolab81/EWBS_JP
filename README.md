@@ -1,4 +1,4 @@
-# EWBS Python Prototype
+# EWBS Prototype
 
 A small, license-free encoder/decoder prototype for Japan's **Emergency
 Warning Broadcasting System (EWBS / 緊急警報放送)** - the analog-radio alarm
